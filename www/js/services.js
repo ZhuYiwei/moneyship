@@ -14,6 +14,9 @@ angular.module('starter.services', [])
     { id: 3, name: 'Betty',money:31 }
   ];
   return {
+    /**
+     * Select all friends from the db
+     */
     all: function(callback) {
       var sql = "SELECT * FROM AllFriendsTable";
       DB.transaction(function(tx) {

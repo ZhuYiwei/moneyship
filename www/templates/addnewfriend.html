@@ -1,0 +1,31 @@
+<div class="modal" >
+
+  <ion-header-bar>
+    <h1 class="title">Add a new friend</h1>
+    <div class="buttons">
+      <button class="button button-clear" ng-click="close()">Close</button>
+    </div>
+  </ion-header-bar>
+
+  <ion-content>
+    <form ng-submit="doadd()">
+      <div class="list">
+        <label class="item item-input">
+          <span class="input-label">Friend name</span>
+          <!-- <input type="text" id="newfriendname" ng-model="newfriend.name" value="jone"> -->
+          <input type="text" id="newfriendname" value="{{newFriendName}}">
+        </label>
+
+        <label class="item item-input">
+          <span class="input-label" >email</span>
+          <!-- <input type="email" id="newfriendemail" ng-model="newfriend.email"> -->
+          <input type="email" id="newfriendemail">
+        </label>
+        <label class="item">
+          <button class="button button-block button-positive" type="submit">Add</button>
+        </label>
+      </div>
+    </form>
+  </ion-content>
+</div>
+

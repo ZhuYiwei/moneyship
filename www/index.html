@@ -12,6 +12,9 @@
     <link href="css/ionic.app.css" rel="stylesheet">
     -->
 
+    <script src="lib/jquery/dist/jquery.min.js"></script>
+
+
     <!-- ionic/angularjs js -->
     <script src="lib/ionic/js/ionic.bundle.js"></script>
 
@@ -22,26 +25,6 @@
     <script src="js/app.js"></script>
     <script src="js/controllers.js"></script>
     <script src="js/services.js"></script>
-
-    <script type="text/javascript">
-        var db = openDatabase('mydb', '1.0', 'Moneyship DB', 2 * 1024 * 1024);
-        var friendslist;
-        db.transaction(function (tx) {
-            tx.executeSql('CREATE TABLE IF NOT EXISTS Friends (id unique, name, email)');
-        });
-
-db.transaction(function (tx) {
-  tx.executeSql('SELECT * FROM Friends', [], function (tx, results) {
-   var len = results.rows.length, i;
-   friendslist = "<p>Found rows: " + len + "</p>";
-   document.querySelector('#status').innerHTML +=  msg;
-   for (i = 0; i < len; i++){
-     msg = "<p><b>" + results.rows.item(i).log + "</b></p>";
-     document.querySelector('#status').innerHTML +=  msg;
-   }
- }, null);
-});
-    </script>
 
   </head>
 

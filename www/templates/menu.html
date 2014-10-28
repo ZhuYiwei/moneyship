@@ -8,6 +8,7 @@
 
   <ion-side-menu side="left">
     <header class="bar bar-header bar-calm">
+
       <h1 class="title"></h1>
     </header>
     <ion-content class="has-header">
@@ -15,7 +16,10 @@
         <a class="item item-divider" nav-clear menu-close href="#/app/home">
           Home
         </a>
-        <ion-item nav-clear menu-close ng-click="login()">
+        <ion-item nav-clear menu-close ng-click="reset()">
+          Reset
+        </ion-item>
+        <!-- <ion-item nav-clear menu-close ng-click="login()">
           Login
         </ion-item>
         <ion-item nav-clear menu-close href="#/app/search">
@@ -26,13 +30,12 @@
         </ion-item>
         <ion-item nav-clear menu-close href="#/app/playlists">
           playlists
-        </ion-item>
+        </ion-item> -->
 <!-- 去掉menu-close，点的时候就不会自动关闭 -->
         <div class="item item-divider" nav-clear> 
           Add bill
-
         </div>
-          <ion-item nav-clear menu-close href="#/app/choosefriends"> <!-- 要改成onetoone -->
+          <ion-item nav-clear menu-close href="#/app/onetoone"> <!-- 要改成onetoone -->
             One to One
           </ion-item>
           <ion-item nav-clear menu-close ng-click="login()">
@@ -41,6 +44,13 @@
 
       </ion-list>
     </ion-content>
+    <ion-footer-bar align-title="left" class="bar-calm">
+      <div class="buttons">
+        <button class="button button-icon icon ion-gear-a" >
+          Reset
+        </button>
+      </div>
+    </ion-footer-bar>
   </ion-side-menu>
 </ion-side-menus>
 

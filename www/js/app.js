@@ -31,7 +31,7 @@ angular.module('starter', ['ionic', 'starter.controllers','starter.services'])
       templateUrl: "templates/menu.html",
       controller: 'AppCtrl'
     })
-// by yiwei
+
     .state('app.home', {
       url: "/home",
       views:{
@@ -51,7 +51,7 @@ angular.module('starter', ['ionic', 'starter.controllers','starter.services'])
         }
       }
     })
-
+    //origin
     .state('app.choosefriends', {
       url: "/choosefriends",
       views:{
@@ -61,6 +61,10 @@ angular.module('starter', ['ionic', 'starter.controllers','starter.services'])
         }
       }
     })
+    //test
+
+
+
     .state('app.addnewfriend', {
       url: "/addnewfriend",
       views:{

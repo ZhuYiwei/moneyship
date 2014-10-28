@@ -6,38 +6,42 @@
 
 
   <ion-content>
-    <form ng-submit="doadd()">
+    <form ng-submit="doAddBill()">
     <label class="item item-input">
         <div class="input-label" >
           With Whom
         </div>
-        <div> Who is been chosen </div>
-        <a class="icon ion-plus-round" href="#/app/choosefriends"></a>
+        <span ng-show="$parent.Friend.name">
+          {{$parent.Friend.name}}
+        </span>
+        <label ng-click='goChooseFriend()' class="icon ion-plus-round" style="right:10px; position:absolute; top:15px;">
+        </label>
+
       </label>
       <label class="item item-input item-select">
         <div class="input-label" >
           Type
         </div>
-        <select ng-model="choice">
+        <select ng-model="choice" id="typechoice">
           <option ng-value="'owed'" selected>owes me</option>
-          <option ng-value="owe">I owe</option>
+          <option ng-value="'owe'">I owe</option>
         </select>
       </label>
       <div class="list">
         <label class="item item-input">
           <span class="input-label" style="float:right">$</span>
-          <input type="text" ng-model="addData.money" placeholder="0.00">
+          <input type="number" id="newbillmoney" ng-model="addData.money" placeholder="0.00">
         </label>
         <label class="item item-input">
           <span class="input-label">for</span>
-          <input type="text" ng-model="addData.description" placeholder="description">
+          <input type="text" id="newbilldescription" ng-model="description" placeholder="description">
         </label>
         <label class="item item-input">
           <span class="input-label">Date</span>
-          <input type="date" ng-model="addData.date">
+          <input type="date" ng-model="date" id="newbilldate">
         </label>
         <label class="item">
-          <button class="button button-block button-positive" type="submit">Add</button>
+          <button class="button button-block button-positive" type="submit">Add Bill</button>
         </label>
       </div>
     </form>

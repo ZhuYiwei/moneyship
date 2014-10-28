@@ -7,20 +7,13 @@ angular.module('starter.services', [])
 //fake data 
  .factory('AllFriends', function(DB) {
 
-  var allfriends = [
-    { id: 0, name: 'Jack', money:30 },
-    { id: 1, name: 'Joe', money:55 },
-    { id: 2, name: 'Adlam', money:9 },
-    { id: 3, name: 'Betty',money:31 }
-  ];
+  var allfriends = [];
   return {
-    /**
-     * Select all friends from the db
-     */
+
     all: function(callback) {
       var sql = "SELECT * FROM AllFriendsTable";
       DB.transaction(function(tx) {
-        console.log("Select all friends from db");
+        console.log("s: Select all friends from AllFriendsTable");
         tx.executeSql(sql, [], function(tx, result) {
           var r = [];
           for (var i = 0; i < result.rows.length; i++) {
@@ -29,65 +22,121 @@ angular.module('starter.services', [])
           callback(r);
         });
       });
-      return allfriends;
+    },
+    //欠我钱的
+    allfriendsoweme: function(callback) {
+      var sql = "SELECT * FROM AllFriendsTable WHERE money>0";
+      DB.transaction(function(tx) {
+        console.log("s: Select allfriendsoweme from AllFriendsTable");
+        tx.executeSql(sql, [], function(tx, result) {
+          var r = [];
+          for (var i = 0; i < result.rows.length; i++) {
+            r.push(result.rows.item(i));
+          }
+          callback(r);
+        });
+      });
+    },
+    //我欠谁钱
+    allfriendsiowe: function(callback) {
+      var sql = "SELECT * FROM AllFriendsTable WHERE money<0";
+      DB.transaction(function(tx) {
+        console.log("s: Select allfriendsiowe from AllFriendsTable");
+        tx.executeSql(sql, [], function(tx, result) {
+          var r = [];
+          for (var i = 0; i < result.rows.length; i++) {
+            r.push(result.rows.item(i));
+          }
+          callback(r);
+        });
+      });
     },
     get: function(allfriendsId) {
       // Simple index lookup
       return allfriends[allfriendsId];
     },
     add: function(friend, callback){
-      var sqlStr = 'INSERT INTO AllFriendsTable (name, email) VALUES (?,?)';
+      var sqlStr = 'INSERT INTO AllFriendsTable (name, email, money) VALUES (?,?,?)';
       DB.transaction(function(tx) {
-        console.log(sqlStr)
-        console.log(friend.name)
-        tx.executeSql(sqlStr, [friend.name, friend.email]);
+        console.log(sqlStr,friend.name,friend.email,friend.money);
+        tx.executeSql(sqlStr, [friend.name, friend.email, friend.money]);
         callback();
+      });
+    },
+    update: function(bill, callback){
+      var sqlStr = 'UPDATE AllFriendsTable SET money=? WHERE name=?';
+      var originmoney;
+      console.log("Update1:tempmoney(text)=",bill.money);
+      DB.transaction(function(tx) {
+        tx.executeSql('SELECT * FROM AllFriendsTable WHERE name=?',[bill.name],function(tx, result) {
+          originmoney=result.rows.item(0).money;
+          console.log("Update2:originmoney=",originmoney);         
+          if(bill.type=="owe"){
+            console.log("update3:newmoney after owe");
+            tx.executeSql(sqlStr, [(originmoney-parseInt(bill.money)), bill.name],function(){
+              console.log("update4:originmoney-parseInt(bill.money)=",originmoney-parseInt(bill.money));
+              callback();
+            });
+          }
+          else{
+            console.log("update3:new money after I'm owed:");
+            tx.executeSql(sqlStr, [(originmoney+parseInt(bill.money)),bill.name],function(){
+              console.log("update4:originmoney+parseInt(bill.money)=",originmoney+parseInt(bill.money));
+              callback();
+            });
+          }
+        });      
       });
     },
     createTable: function() {
       DB.transaction(function(tx) {
-        tx.executeSql('CREATE TABLE IF NOT EXISTS AllFriendsTable (id, name, email, money)');
+        tx.executeSql('CREATE TABLE IF NOT EXISTS AllFriendsTable (id, name NOT NULL UNIQUE, email NOT NULL UNIQUE, money NOT NULL)');
       });
     }
   }
 })
 
-// //real data: already added friends 所有已添加的朋友
-// .factory('AllFriends', function(DB) {
-//   var allfriends = [];
 
-//   DB.transaction(function createTable(tx) {
-//     tx.executeSql('CREATE TABLE IF NOT EXISTS AllFriends (name, email, money)');
-//   });
 
-//   function saveRecord() {
-//     console.log("Entering saveRecord");
-//     DB.transaction(insertRecord);
-//     console.log("Leaving saveRecord");
-//   }
 
-//   function insertRecord(tx) {
-//     console.log("Entering insertRecord");
-//     //Create a new date object to hold the date the user entered
-//     var tmpName = document.getElementById("editname").value;
-//     console.log("Name: " + tmpName);
-//     var tmpEmail = document.getElementById("editEmail").value;
-//     console.log("Email: " + tmpEmail);
-//     var sqlStr = 'INSERT INTO AllFriends (name, email) VALUES (?,?)';
-//     console.log(sqlStr);
-//     tx.executeSql(sqlStr, [tmpName, tmpEmail]);
 
-//   return {
-//     all: function() {
-//       return allfriends;
-//     },
-//     get: function(allfriendsId) {
-//       // Simple index lookup
-//       return allfriends[allfriendsId];
-//     }
-//   // }
-// })
+ .factory('AllBills', function(DB) {
 
+  return {
+
+    all: function(callback) {
+      var sql = "SELECT * FROM AllFriendsTable";
+      DB.transaction(function(tx) {
+        console.log("s: Select all friends from AllFriendsTable");
+        tx.executeSql(sql, [], function(tx, result) {
+          var r = [];
+          for (var i = 0; i < result.rows.length; i++) {
+            r.push(result.rows.item(i));
+          }
+          callback(r);
+        });
+      });
+    },
+   
+    get: function(allfriendsId) {
+      // Simple index lookup
+      return allfriends[allfriendsId];
+    },
+    add: function(bill, callback){
+      var sqlStr = 'INSERT INTO AllBillsTable (name,type,money,description,date) VALUES (?,?,?,?,?)';
+      DB.transaction(function(tx) {
+        console.log(sqlStr,bill.name,bill.type, bill.money,bill.description,bill.date);
+        tx.executeSql(sqlStr, [bill.name, bill.type, bill.money, bill.description, bill.date]);
+        callback();
+      });
+    },
+    createTable: function() {
+      DB.transaction(function(tx) {
+        tx.executeSql('CREATE TABLE IF NOT EXISTS AllBillsTable (name NOT NULL, type NOT NULL, money NOT NULL, description,image, date)');
+      });
+    }
+  }
+})
 
 
 .factory('FriendsIOwe', function(DB) {
@@ -124,44 +173,6 @@ angular.module('starter.services', [])
     }
   }
 })
-
-// .factory('FriendsOweMe', function(DB) {
-//   var friendsoweme = [
-//     { id: 0, name: 'Stephen', money:60 },
-//     { id: 1, name: 'Catherine', money:55 }
-//   ];
-
-//   var msg;
-//     DB.transaction(function (tx) {
-//       tx.executeSql('CREATE TABLE IF NOT EXISTS FriendsOweMe (id unique, name, money)');
-//       tx.executeSql('INSERT INTO FriendsOweMe (id, name, money) VALUES (1,"Stephen2",60)');
-//       tx.executeSql('INSERT INTO FriendsOweMe (id, name, money) VALUES (2,"Catherine2",55)');
-//       msg = '<p>Log message created and row inserted.</p>';
-//       document.querySelector('#status').innerHTML =  msg;
-//     });
-
-//     DB.transaction(function (tx) {
-//       tx.executeSql('SELECT * FROM FriendsOweMe', [], function (tx, results) {
-//        var len = results.rows.length, i;
-//        msg = "<p>Found rows: " + len + "</p>";
-//        document.querySelector('#status').innerHTML +=  msg;
-//        for (i = 0; i < len; i++){
-//          msg = "<p><b>" + results.rows.item(i).log + "</b></p>";
-//          document.querySelector('#status').innerHTML +=  msg;
-//        }
-//      }, null);
-//     });
-
-//   return {
-//     all: function() {
-//       return friendsoweme;
-//     },
-//     get: function(friendsowemeId) {
-//       // Simple index lookup
-//       return friendsoweme[friendsowemeId];
-//     }
-//   }
-// })
 
 
 .factory('DB', function() {

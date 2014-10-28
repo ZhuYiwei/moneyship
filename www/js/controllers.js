@@ -1,33 +1,46 @@
 angular.module('starter.controllers', [])
 
 //
-.controller('AddBillCtrl', function($scope, $ionicModal, $timeout, $stateParams) {
+.controller('AddBillCtrl', function($scope,$state,$stateParams,AllBills,AllFriends) {
+  $scope.goChooseFriend = function(){
+    $state.go('app.choosefriends');
+  }
 
-  $scope.addbilldata = {};
+  $scope.doAddBill=function(){
+    var tmpBillName = $scope.Friend.name ;
+    console.log("tmpBillName:"+tmpBillName);
+    var tmpType = document.getElementById("typechoice").value;
+    console.log("tmpBillType:"+tmpType);
+    var tmpMoney = document.getElementById("newbillmoney").value;
+    console.log("tmpBillMoney:"+tmpMoney);
+    var tmpDescription = document.getElementById("newbilldescription").value;
+    console.log("tmpBillDescription:"+tmpDescription);
+    var tmpDate = document.getElementById("newbilldate").value;
+    console.log("tmpBillDate:"+tmpDate);
+    AllBills.createTable();
+    AllBills.add({ name: tmpBillName, type:tmpType, money:tmpMoney, description:tmpDescription, date:tmpDate},
+      function(){
+        $state.go('app.home');
+        $scope.Friend.name='';
+        $scope.Friend.show=false;
+        AllFriends.update({name:tmpBillName, type:tmpType, money:tmpMoney},function(){
+          console.log("update5: update succeed");
+        });
+    });
 
-  $ionicModal.fromTemplateUrl('templates/onetoone.html', {
-    scope: $scope
-  }).then(function(modal) {
-    $scope.modal = modal;
-  });
-
-  $scope.close = function() {
-    $scope.modal.hide();
   };
-
-
-  $scope.doadd = function() {    
-    console.log('Doing add', $scope.addbilldata);
-    $timeout(function() {$scope.close();}, 1000);
-  };
-
 })
 
+.controller('ChooseFriendCtrl', function($scope,$ionicViewService, $ionicModal, $timeout, $stateParams, AllFriends) {
 
-.controller('ChooseFriendCtrl', function($scope, $ionicModal, $timeout, $stateParams, AllFriends, DB) {
+  $scope.choose = function(friend){
+    $scope.Friend.name=friend;
+    $scope.Friend.show=true;
+    console.log(friend);
+    var backView = $ionicViewService.getBackView();
+    backView.go();
+  }
 
-  $scope.addData = {};
- 
   $ionicModal.fromTemplateUrl('templates/addnewfriend.html', {
     scope: $scope
   }).then(function(modal) {
@@ -37,73 +50,80 @@ angular.module('starter.controllers', [])
   $scope.close = function() {
     $scope.modal.hide();
   };
-  
-  $scope.name=$scope.friendname;
-  console.log($scope.friendname)
-
-
-  // $scope.searchfriend = document.getElementById.("inputfriendname");
-  $scope.newfriend = AllFriends.newFriend;
 
   $scope.addfriend = function() {
-    // $scope.newfriend.name = $scope.searchfriend;
     $scope.newFriendName=document.getElementById('inputfriendname').value;
     $scope.modal.show();
   };
 
-  $scope.doadd = function() {    
-    console.log('Doing add', $scope.newfriend);
+  $scope.doadd = function() {     
     var tmpName = document.getElementById("newfriendname").value;
     var tmpEmail = document.getElementById("newfriendemail").value;
-    AllFriends.add({ name: tmpName, email: tmpEmail }, function() {
-      AllFriends.all(function(r) {$scope.allfriends = r});
+    console.log('Doing addnewfriend:', tmpName,tmpEmail);
+    AllFriends.createTable();
+    AllFriends.add({ name: tmpName, email: tmpEmail, money: 0 }, function() {
+      AllFriends.all(function(r) {
+        $scope.allfriends = r;
+        console.log('AllFriendsList update');
+      });
       $scope.modal.hide();
     });
-    
-
-    // $timeout(function() {$scope.close();}, 1000);
   };
 
   $scope.allfriend = AllFriends.get($stateParams.allfriendsId);
   AllFriends.all(function(r) {$scope.allfriends = r});
-
-
 })
 
+.controller('HomeCtrl', function($ionicViewService,$scope,$stateParams,FriendsIOwe,FriendsOweMe,AllFriends,AllBills) {
+  //跳转到主页面时立即清除back按钮 
+  $ionicViewService.clearHistory();
+
+  AllFriends.allfriendsoweme(function(r) {
+    $scope.friendsoweme = r;
+    console.log("controller:friendsoweme");
+  });
+
+  AllFriends.allfriendsiowe(function(r) {
+    $scope.friendsiowe = r;
+    console.log("controller:friendsiowe");
+  });
 
 
-
-.controller('HomeCtrl', function($scope,$stateParams,FriendsIOwe,FriendsOweMe) {
-  $scope.friendsiowe = [
-    { id: 0, name: 'Jack', money:30 },
-    { id: 1, name: 'Joe', money:55 },
-    { id: 2, name: 'Adam', money:9 },
-    { id: 3, name: 'Betty',money:31 }
-  ];
   $scope.friendiowe = FriendsIOwe.get($stateParams.friendsioweId);
-  $scope.friendsoweme = FriendsOweMe.all();
   $scope.friendoweme = FriendsOweMe.get($stateParams.friendsowemeId);
 })
-//end
 
-.controller('PlaylistsCtrl', function($scope) {
-  $scope.playlists = [
-    { title: 'Reggae', id: 1 },
-    { title: 'Chill', id: 2 },
-    { title: 'Dubstep', id: 3 },
-    { title: 'Indie', id: 4 },
-    { title: 'Rap', id: 5 },
-    { title: 'Cowbell', id: 6 }
-  ];
-})
 
-.controller('PlaylistCtrl', function($scope, $stateParams) {
-})
+// .controller('PlaylistsCtrl', function($scope) {
+//   $scope.playlists = [
+//     { title: 'Reggae', id: 1 },
+//     { title: 'Chill', id: 2 },
+//     { title: 'Dubstep', id: 3 },
+//     { title: 'Indie', id: 4 },
+//     { title: 'Rap', id: 5 },
+//     { title: 'Cowbell', id: 6 }
+//   ];
+// })
+
+// .controller('PlaylistCtrl', function($scope, $stateParams) {
+// })
 
 //模板
-.controller('AppCtrl', function($scope, $ionicModal, $timeout) {
+.controller('AppCtrl', function($scope, $ionicModal, $timeout,DB) {
   // Form data for the login modal
+
   $scope.loginData = {};
+  $scope.Friend={
+    name: "",
+    show: false
+  };
+
+  $scope.reset = function(){
+    // DB.transaction(tx){
+    //   tx.executeSql('DROP TABLE AllBillsTable');
+    //   tx.executeSql('DROP TABLE AllFriendsTable');
+    // };
+  };
 
   // Create the login modal that we will use later
   $ionicModal.fromTemplateUrl('templates/login.html', {
@@ -131,5 +151,9 @@ angular.module('starter.controllers', [])
     $timeout(function() {
       $scope.closeLogin();
     }, 1000);
+  };
+
+  $scope.click = function() {
+    console.log(this.friend);
   };
 });

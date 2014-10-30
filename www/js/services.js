@@ -80,10 +80,10 @@ angular.module('starter.services', [])
       return VFriendsIOwe[friendsioweId];
     },
     add: function(friend, callback){
-      var sqlStr = 'INSERT INTO AllFriendsTable (name, email, money) VALUES (?,?,?)';
+      var sqlStr = 'INSERT INTO AllFriendsTable (id,name, email, money) VALUES (?,?,?,?)';
       DB.transaction(function(tx) {
-        console.log(sqlStr,friend.name,friend.email,friend.money);
-        tx.executeSql(sqlStr, [friend.name, friend.email, friend.money]);
+        console.log(sqlStr,friend.id,friend.name,friend.email,friend.money);
+        tx.executeSql(sqlStr, [riend.id,friend.name, friend.email, friend.money]);
         callback();
       });
     },
@@ -112,14 +112,27 @@ angular.module('starter.services', [])
         });      
       });
     },
-    reset: function(resetname){
+    reset: function(resetname,callback){
       var sqlStr = 'UPDATE AllFriendsTable SET money=0 WHERE name=?';
       DB.transaction(function(tx){
         tx.executeSql(sqlStr,[resetname],function(){
-          console.log("set money=0 reset succeed");
+          console.log("Settle2:set money=0 succeed");
+          callback();
         });
+        
       });
     },//AllFriends.reset()
+    select: function(selectname,callback){
+      var sql='SELECT * FROM AllFriendsTable WHERE name=?';
+      DB.transaction(function(tx) {
+        console.log("");
+        tx.executeSql(sql, [selectname], function(tx, result) {
+          var r = [];
+          r.push(result.rows.item(0));
+          callback(r);
+        });
+      }); 
+    },//AllFriends.select();
     createTable: function() {
       DB.transaction(function(tx) {
         tx.executeSql('CREATE TABLE IF NOT EXISTS AllFriendsTable (id, name NOT NULL UNIQUE, email NOT NULL UNIQUE, money NOT NULL)');

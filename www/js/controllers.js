@@ -61,7 +61,7 @@ angular.module('starter.controllers', [])
     var tmpEmail = document.getElementById("newfriendemail").value;
     console.log('Doing addnewfriend:', tmpName,tmpEmail);
     AllFriends.createTable();
-    AllFriends.add({ name: tmpName, email: tmpEmail, money: 0 }, function() {
+    AllFriends.add({ id:0, name: tmpName, email: tmpEmail, money: 0 }, function() {
       AllFriends.all(function(r) {
         $scope.allfriends = r;
         console.log('AllFriendsList update');
@@ -97,12 +97,16 @@ angular.module('starter.controllers', [])
 
 .controller('BillDetailCtrl', function($scope,$stateParams,AllFriends,AllBills) {  
   $scope.friend = AllFriends.getOwe();
-  console.log($scope.friend);
+  console.log("settle1: whose billdetail",$scope.friend);
   AllBills.select($scope.friend.name,function(r){
     $scope.billdetail = r;
   });
   $scope.settleAll=function(){
-    AllFriends.reset($scope.friend.name);
+    AllFriends.reset($scope.friend.name,function(){
+      $scope.friend.money = 0;
+      console.log("Settle3:new money=",$scope.friend.money);
+      });
+
     AllBills.deleterecord($scope.friend.name,function(){
       AllBills.select($scope.friend.name,function(r){
         $scope.billdetail = r;
@@ -111,7 +115,7 @@ angular.module('starter.controllers', [])
       });      
     });
   };
-})
+})//
 
 .controller('PlaylistsCtrl', function($scope) {
   $scope.playlists = [

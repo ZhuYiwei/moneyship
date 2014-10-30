@@ -8,6 +8,9 @@ angular.module('starter.services', [])
  .factory('AllFriends', function(DB) {
 
   var allfriends = [];
+  var VFriendsOweMe = [];
+  var VFriendsIOwe = [];
+  var friendOwe;
   return {
 
     all: function(callback) {
@@ -22,16 +25,29 @@ angular.module('starter.services', [])
           callback(r);
         });
       });
+    },//AllFriends.all()
+    setOwe: function(o){
+      friendOwe = o;
     },
+    getOwe: function(){
+      return friendOwe;
+    },//AllFriends.getOwe()
     //欠我钱的
     allfriendsoweme: function(callback) {
       var sql = "SELECT * FROM AllFriendsTable WHERE money>0";
       DB.transaction(function(tx) {
-        console.log("s: Select allfriendsoweme from AllFriendsTable");
+        console.log("Home: Select allfriendsoweme from AllFriendsTable");
         tx.executeSql(sql, [], function(tx, result) {
           var r = [];
           for (var i = 0; i < result.rows.length; i++) {
             r.push(result.rows.item(i));
+            VFriendsOweMe.push(result.rows.item(i));
+            r[i].id=i;
+            VFriendsOweMe[i].id = i;//为啥赋值失败？
+            r[i].name = "Yiwei";
+            //console.log("r[i].id:",r[i].id);
+            //console.log("VFriendsOweMe.id:",VFriendsOweMe[i].id);
+            //console.log("VFriendsOweMe.name:",VFriendsOweMe[i].name);
           }
           callback(r);
         });
@@ -41,11 +57,13 @@ angular.module('starter.services', [])
     allfriendsiowe: function(callback) {
       var sql = "SELECT * FROM AllFriendsTable WHERE money<0";
       DB.transaction(function(tx) {
-        console.log("s: Select allfriendsiowe from AllFriendsTable");
+        console.log("Home: Select allfriendsiowe from AllFriendsTable");
         tx.executeSql(sql, [], function(tx, result) {
           var r = [];
           for (var i = 0; i < result.rows.length; i++) {
             r.push(result.rows.item(i));
+            VFriendsIOwe.push(result.rows.item(i));
+
           }
           callback(r);
         });
@@ -54,6 +72,12 @@ angular.module('starter.services', [])
     get: function(allfriendsId) {
       // Simple index lookup
       return allfriends[allfriendsId];
+    },
+    getfriendsoweme: function(friendsowemeId) {
+      return VFriendsOweMe[friendsowemeId];
+    },
+    getfriendsiowe: function(friendsioweId) {
+      return VFriendsIOwe[friendsioweId];
     },
     add: function(friend, callback){
       var sqlStr = 'INSERT INTO AllFriendsTable (name, email, money) VALUES (?,?,?)';
@@ -88,6 +112,14 @@ angular.module('starter.services', [])
         });      
       });
     },
+    reset: function(resetname){
+      var sqlStr = 'UPDATE AllFriendsTable SET money=0 WHERE name=?';
+      DB.transaction(function(tx){
+        tx.executeSql(sqlStr,[resetname],function(){
+          console.log("set money=0 reset succeed");
+        });
+      });
+    },//AllFriends.reset()
     createTable: function() {
       DB.transaction(function(tx) {
         tx.executeSql('CREATE TABLE IF NOT EXISTS AllFriendsTable (id, name NOT NULL UNIQUE, email NOT NULL UNIQUE, money NOT NULL)');
@@ -117,7 +149,18 @@ angular.module('starter.services', [])
         });
       });
     },
-   
+    select: function(selectname,callback){
+      var sql = "SELECT * FROM AllBillsTable WHERE name=?";
+      DB.transaction(function(tx){
+        tx.executeSql(sql,[selectname],function(tx,result){
+          var r = [];
+          for (var i = 0; i < result.rows.length; i++) {
+            r.push(result.rows.item(i));
+          }
+          callback(r);
+        });
+      });
+    },
     get: function(allfriendsId) {
       // Simple index lookup
       return allfriends[allfriendsId];
@@ -130,9 +173,19 @@ angular.module('starter.services', [])
         callback();
       });
     },
+    deleterecord:function(deletename,callback){
+      var sqlStr = 'DELETE FROM AllBillsTable WHERE name=?'
+      DB.transaction(function(tx){
+        tx.executeSql(sqlStr,[deletename],function(){
+          console.log("delete succeed");
+        }); 
+        callback();
+      });
+      
+    },
     createTable: function() {
       DB.transaction(function(tx) {
-        tx.executeSql('CREATE TABLE IF NOT EXISTS AllBillsTable (name NOT NULL, type NOT NULL, money NOT NULL, description,image, date)');
+        tx.executeSql('CREATE TABLE IF NOT EXISTS AllBillsTable (name NOT NULL, type NOT NULL, money NOT NULL, description NOT NULL,image, date)');
       });
     }
   }

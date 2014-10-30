@@ -42,6 +42,16 @@ angular.module('starter', ['ionic', 'starter.controllers','starter.services'])
       }
     })
 
+    .state('app.billdetail', {
+      url: "/home/:friendId",
+      views:{
+        'menuContent' :{
+          templateUrl: "templates/billdetail.html",
+          controller: 'BillDetailCtrl'
+        }
+      }
+    })
+
     .state('app.onetoone', {
       url: "/onetoone",
       views:{

@@ -10,7 +10,7 @@
         <div class="box yellow">
           <h1>Who Owes You</h1>
           <ion-list>
-            <ion-item ng-repeat="friend in friendsoweme" type="item-text-wrap">
+            <ion-item  ng-click='friendOwe(friend)' ng-repeat="friend in friendsoweme" type="item-text-wrap" href="#/app/home/{{friend.id}}">
                {{friend.name}} <span style="float:right">${{friend.money}}</span>
             </ion-item>
           </ion-list>
@@ -20,7 +20,7 @@
         <div class="box blue">
           <h1>You owe</h1>
           <ion-list>
-            <ion-item ng-repeat="friend in friendsiowe" type="item-text-wrap">
+            <ion-item ng-click='friendOwe(friend)' ng-repeat="friend in friendsiowe" type="item-text-wrap" href="#/app/home/{{friend.id}}">
               {{friend.name}} <span style="float:right">${{-friend.money}}</span>
             </ion-item>
           </ion-list>

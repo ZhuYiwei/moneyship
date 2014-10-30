@@ -87,26 +87,45 @@ angular.module('starter.controllers', [])
     $scope.friendsiowe = r;
     console.log("controller:friendsiowe");
   });
-
-
+  $scope.friendOwe = function(o){
+    AllFriends.setOwe(o);
+  }
+  
   $scope.friendiowe = FriendsIOwe.get($stateParams.friendsioweId);
   $scope.friendoweme = FriendsOweMe.get($stateParams.friendsowemeId);
 })
 
+.controller('BillDetailCtrl', function($scope,$stateParams,AllFriends,AllBills) {  
+  $scope.friend = AllFriends.getOwe();
+  console.log($scope.friend);
+  AllBills.select($scope.friend.name,function(r){
+    $scope.billdetail = r;
+  });
+  $scope.settleAll=function(){
+    AllFriends.reset($scope.friend.name);
+    AllBills.deleterecord($scope.friend.name,function(){
+      AllBills.select($scope.friend.name,function(r){
+        $scope.billdetail = r;
+        $scope.$apply();
+        console.log("settleAll finish controller");
+      });      
+    });
+  };
+})
 
-// .controller('PlaylistsCtrl', function($scope) {
-//   $scope.playlists = [
-//     { title: 'Reggae', id: 1 },
-//     { title: 'Chill', id: 2 },
-//     { title: 'Dubstep', id: 3 },
-//     { title: 'Indie', id: 4 },
-//     { title: 'Rap', id: 5 },
-//     { title: 'Cowbell', id: 6 }
-//   ];
-// })
+.controller('PlaylistsCtrl', function($scope) {
+  $scope.playlists = [
+    { title: 'Reggae', id: 1 },
+    { title: 'Chill', id: 2 },
+    { title: 'Dubstep', id: 3 },
+    { title: 'Indie', id: 4 },
+    { title: 'Rap', id: 5 },
+    { title: 'Cowbell', id: 6 }
+  ];
+})
 
-// .controller('PlaylistCtrl', function($scope, $stateParams) {
-// })
+.controller('PlaylistCtrl', function($scope, $stateParams) {
+})
 
 //模板
 .controller('AppCtrl', function($scope, $ionicModal, $timeout,DB) {

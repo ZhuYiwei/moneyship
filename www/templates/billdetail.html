@@ -1,0 +1,27 @@
+<ion-view title="Bill Details">
+
+  <ion-nav-buttons side='right'>
+    <button class="button button-clear ion-loop " ng-click="settleAll()">Settle</button>
+  </ion-nav-buttons>
+
+  <ion-content has-header="true" padding="false">
+  	<ion-list>
+ 	    <div class="item item-avatar" >
+  		    <img ng-src="{{friend.image}}">
+  	        <h2>{{friend.name}}</h2>
+	        <p>{{friend.money}}</p>
+		</div> 
+  	</ion-list>
+  	<div class="item item-divider">Details</div>
+		<ion-list ng-repeat="bill in billdetail">
+          <div class="item">
+            <p class="ion-coffee"> 
+              {{bill.description}}
+              <span class="ion-pricetag" style="float:right"> 
+                {{bill.type}}${{bill.money}}
+              </span>
+            </p> 
+          </div>
+  	    </ion-list>
+  </ion-content>
+</ion-view>

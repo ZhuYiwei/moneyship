@@ -15,12 +15,13 @@
   	<div class="item item-divider">Details</div>
 		<ion-list ng-repeat="bill in billdetail">
           <div class="item">
-            <p class="ion-coffee"> 
+            <h2 class="ion-coffee"> 
               {{bill.description}}
               <span class="ion-pricetag" style="float:right"> 
-                {{bill.type}}${{bill.money}}
+                {{bill.type}} ${{bill.money}}
               </span>
-            </p> 
+            </h2> 
+            <p>Date: {{bill.date}}</p>
           </div>
   	    </ion-list>
   </ion-content>

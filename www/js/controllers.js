@@ -1,9 +1,27 @@
 angular.module('starter.controllers', [])
-
+//for picture URL
+.config(function($compileProvider){
+  $compileProvider.imgSrcSanitizationWhitelist(/^\s*(https?|ftp|mailto|file|tel):/);
+})
 //
 .controller('AddBillCtrl', function($scope,$state,$stateParams,AllBills,AllFriends) {
   $scope.goChooseFriend = function(){
     $state.go('app.choosefriends');
+  }
+//take a picture
+  $scope.getPhoto = function() {
+    console.log('Getting camera');
+    Camera.getPicture().then(function(imageURI) {
+      console.log(imageURI);
+      $scope.lastPhoto = imageURI;
+    }, function(err) {
+      console.err(err);
+    }, {
+      quality: 75,
+      targetWidth: 320,
+      targetHeight: 320,
+      saveToPhotoAlbum: false
+    });
   }
 
   $scope.doAddBill=function(){

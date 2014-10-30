@@ -135,7 +135,7 @@ angular.module('starter.services', [])
     },//AllFriends.select();
     createTable: function() {
       DB.transaction(function(tx) {
-        tx.executeSql('CREATE TABLE IF NOT EXISTS AllFriendsTable (id, name NOT NULL UNIQUE, email NOT NULL UNIQUE, money NOT NULL)');
+        tx.executeSql('CREATE TABLE IF NOT EXISTS AllFriendsTable (id, name NOT NULL UNIQUE,image, email NOT NULL UNIQUE, money NOT NULL)');
       });
     }
   }
@@ -203,7 +203,36 @@ angular.module('starter.services', [])
     }
   }
 })
+//take a picture
+.factory('Camera', ['$q', function($q) {
 
+  return {
+    getPicture: function(options) {
+      var q = $q.defer();
+
+      navigator.camera.getPicture(function(result) {
+        // Do any magic you need
+        q.resolve(result);
+      }, function(err) {
+        q.reject(err);
+      }, options);
+
+      return q.promise;
+    }
+  }
+}])
+// .factory('Camera', ['$q', function($q) {
+
+//   return {
+//     getVideo: function(options) {
+//       var q = $q.defer();
+//       navigator.device.capture.captureVideo(function(result) {
+//         q.resolve(result);
+//         }, function(err) {q.reject(err);}, options);
+//         return q.promise;
+//         }
+//                     }
+//                   }])        
 
 .factory('FriendsIOwe', function(DB) {
   var friendsiowe = [

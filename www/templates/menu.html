@@ -7,16 +7,16 @@
   </ion-pane>
 
   <ion-side-menu side="left">
-    <header class="bar bar-header bar-calm">
+    <header class="bar bar-header bar-positive">
 
       <h1 class="title"></h1>
     </header>
     <ion-content class="has-header">
       <ion-list>
-        <a class="item item-divider" nav-clear menu-close href="#/app/home">
+        <a class="item item-divider ion-home" nav-clear menu-close href="#/app/home">
           Home
         </a>
-        <ion-item nav-clear menu-close ng-click="reset()">
+        <!-- <ion-item nav-clear menu-close ng-click="reset()">
           Reset
         </ion-item>
         <ion-item nav-clear menu-close ng-click="login()">
@@ -27,29 +27,29 @@
         </ion-item>
         <ion-item nav-clear menu-close href="#/app/browse">
           Browse
-        </ion-item>
-        <ion-item nav-clear menu-close href="#/app/playlists">
-          playlists
-        </ion-item>
+        </ion-item> -->
+        <a class="item item-divider ion-person-stalker"nav-clear menu-close href="#/app/playlists">
+          All friends
+        </a>
 <!-- 去掉menu-close，点的时候就不会自动关闭 -->
-        <div class="item item-divider" nav-clear> 
+        <a class="item item-divider ion-cash" nav-clear menu-close href="#/app/onetoone"> 
           Add bill
-        </div>
-          <ion-item nav-clear menu-close href="#/app/onetoone"> <!-- 要改成onetoone -->
+        </a>
+<!--           <ion-item nav-clear menu-close href="#/app/onetoone"> 
             One to One
-          </ion-item>
-          <ion-item nav-clear menu-close ng-click="login()">
+          </ion-item> -->
+<!--           <ion-item nav-clear menu-close ng-click="login()">
             One to more
-          </ion-item>
+          </ion-item> -->
 
       </ion-list>
     </ion-content>
-    <ion-footer-bar align-title="left" class="bar-calm">
-      <div class="buttons">
+    <ion-footer-bar align-title="left" class="bar-positive">
+<!--       <div class="buttons">
         <button class="button button-icon icon ion-gear-a" >
           Reset
         </button>
-      </div>
+      </div> -->
     </ion-footer-bar>
   </ion-side-menu>
 </ion-side-menus>

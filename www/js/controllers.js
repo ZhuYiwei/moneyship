@@ -5,7 +5,12 @@ angular.module('starter.controllers', [])
 })
 //
 
-.controller('ChooseFriendCtrl', function($scope,$ionicViewService, $ionicModal, $timeout, $stateParams, AllFriends,AllBills,Camera) {
+.controller('ChooseFriendCtrl', function($scope,$ionicViewService, $ionicModal, $timeout, $stateParams, AllFriends,AllBills,Camera,Utils) {
+  $scope.allfriends = [];
+  AllFriends.all(function(r) {
+    Utils.putAll($scope.allfriends, r);
+    $scope.$apply();
+  });
   //editfriend下用到的
   var f = AllFriends.getFriend();
 
@@ -94,7 +99,8 @@ angular.module('starter.controllers', [])
   };//结束addnewfriend.html下用到的
 
   $scope.allfriend = AllFriends.get($stateParams.allfriendsId);
-  AllFriends.all(function(r) {$scope.allfriends = r});
+  
+
   
   $scope.editfriend = function(o){
     AllFriends.setFriend(o);
@@ -141,25 +147,35 @@ angular.module('starter.controllers', [])
 
 
 
-.controller('HomeCtrl', function($ionicViewService,$scope,$stateParams,FriendsIOwe,FriendsOweMe,AllFriends,AllBills) {
+.controller('HomeCtrl', function($ionicViewService,$scope,$stateParams,FriendsIOwe,FriendsOweMe,AllFriends,AllBills,Utils) {
   //跳转到主页面时立即清除back按钮 
   $ionicViewService.clearHistory();
 
+  $scope.friendsoweme = [];
+
+  $scope.friendsiowe = [];
+
   AllFriends.allfriendsoweme(function(r) {
-    $scope.friendsoweme = r;
+    Utils.putAll($scope.friendsoweme, r);
+    // $scope.$apply();
+    //$scope.friendsoweme = r;
     console.log("controller:friendsoweme");
+    
   });
 
   AllFriends.allfriendsiowe(function(r) {
-    $scope.friendsiowe = r;
+    //$scope.friendsiowe = r;
+    Utils.putAll($scope.friendsiowe, r);
+    //$scope.$apply();
     console.log("controller:friendsiowe");
   });
+  
   $scope.friendOwe = function(o){
     AllFriends.setOwe(o);
   }
   
-  $scope.friendiowe = FriendsIOwe.get($stateParams.friendsioweId);
-  $scope.friendoweme = FriendsOweMe.get($stateParams.friendsowemeId);
+  //$scope.friendiowe = FriendsIOwe.get($stateParams.friendsioweId);
+  // $scope.friendoweme = FriendsOweMe.get($stateParams.friendsowemeId);
 })
 
 .controller('BillDetailCtrl', function($scope,$stateParams,AllFriends,AllBills) {  

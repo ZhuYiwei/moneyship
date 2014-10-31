@@ -303,5 +303,19 @@ angular.module('starter.services', [])
 .factory('DB', function() {
   var DB=openDatabase('mydb', '1.0', 'Test DB', 2 * 1024 * 1024);
   return DB;
+})
+
+.factory('Utils', function() {
+  return {
+    putAll: function(to, from) {
+      if (to && from && to instanceof Array && from instanceof Array) {
+        from.forEach(function(e) {
+          to.push(e);
+        });
+      } else {
+        throw new Error('Utils#putAll: arrays required');
+      }
+    }
+  }
 });
 

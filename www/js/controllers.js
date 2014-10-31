@@ -4,6 +4,67 @@ angular.module('starter.controllers', [])
   $compileProvider.imgSrcSanitizationWhitelist(/^\s*(https?|ftp|mailto|file|tel):/);
 })
 //
+
+.controller('ChooseFriendCtrl', function($scope,$ionicViewService, $ionicModal, $timeout, $stateParams, AllFriends) {
+  //editfriend下用到的
+  $scope.editFriend= AllFriends.getFriend();
+  $scope.save= function(){
+    AllFriends.updateFriend($scope.editFriend);
+  };
+  //choosefriends.html下用到的
+  $scope.choose = function(friend){
+    $scope.Friend.name=friend;
+    $scope.Friend.show=true;
+    console.log(friend);
+    var backView = $ionicViewService.getBackView();
+    backView.go();
+  }
+  //addnewfriend.html下用到的
+  $ionicModal.fromTemplateUrl('templates/addnewfriend.html', {
+    scope: $scope
+  }).then(function(modal) {
+    $scope.modal = modal;
+  });
+  $scope.close = function() {
+    $scope.modal.hide();
+  };
+  $scope.addfriend = function() {
+    $scope.obj.newFriendName=document.getElementById('inputfriendname').value;
+    $scope.modal.show();
+  };
+  $scope.obj = {
+    newFriendName: '',
+    newFriendEmail:''
+  };
+  $scope.doadd = function() {     
+    var tmpName = $scope.obj.newFriendName;
+    var tmpEmail = $scope.obj.newFriendEmail;
+    // var tmpEmail = document.getElementById("newfriendemail").value;
+    console.log('Doing addnewfriend:', tmpName,tmpEmail);
+    AllFriends.createTable();
+    AllFriends.add({ id:0, name: tmpName, image:'img/nopicture.png',email: tmpEmail, money: 0 }, function() {
+      AllFriends.all(function(r) {
+        $scope.allfriends = r;
+        console.log('AllFriendsList update');
+      });
+      $scope.obj.newFriendEmail = '';
+      $scope.obj.newFriendName = '';
+      $scope.modal.hide();
+    });
+  };//结束addnewfriend.html下用到的
+
+  $scope.allfriend = AllFriends.get($stateParams.allfriendsId);
+  AllFriends.all(function(r) {$scope.allfriends = r});
+  
+  $scope.editfriend = function(o){
+    AllFriends.setFriend(o);
+  }  
+})
+
+
+
+
+
 .controller('AddBillCtrl', function($scope,$state,$stateParams,AllBills,AllFriends) {
   $scope.goChooseFriend = function(){
     $state.go('app.choosefriends');
@@ -34,7 +95,7 @@ angular.module('starter.controllers', [])
     var tmpDescription = document.getElementById("newbilldescription").value;
     console.log("tmpBillDescription:"+tmpDescription);
     var tmpDate = document.getElementById("newbilldate").value;
-    console.log("tmpBillDate:"+tmpDate);
+    console.log("tmpBillName:"+tmpBillName,"tmpBillType:"+tmpType,"tmpBillMoney:"+tmpMoney,"tmpBillDescription:"+tmpDescription,"tmpBillDate:"+tmpDate);
     AllBills.createTable();
     AllBills.add({ name: tmpBillName, type:tmpType, money:tmpMoney, description:tmpDescription, date:tmpDate},
       function(){
@@ -49,48 +110,9 @@ angular.module('starter.controllers', [])
   };
 })
 
-.controller('ChooseFriendCtrl', function($scope,$ionicViewService, $ionicModal, $timeout, $stateParams, AllFriends) {
 
-  $scope.choose = function(friend){
-    $scope.Friend.name=friend;
-    $scope.Friend.show=true;
-    console.log(friend);
-    var backView = $ionicViewService.getBackView();
-    backView.go();
-  }
 
-  $ionicModal.fromTemplateUrl('templates/addnewfriend.html', {
-    scope: $scope
-  }).then(function(modal) {
-    $scope.modal = modal;
-  });
 
-  $scope.close = function() {
-    $scope.modal.hide();
-  };
-
-  $scope.addfriend = function() {
-    $scope.newFriendName=document.getElementById('inputfriendname').value;
-    $scope.modal.show();
-  };
-
-  $scope.doadd = function() {     
-    var tmpName = document.getElementById("newfriendname").value;
-    var tmpEmail = document.getElementById("newfriendemail").value;
-    console.log('Doing addnewfriend:', tmpName,tmpEmail);
-    AllFriends.createTable();
-    AllFriends.add({ id:0, name: tmpName, email: tmpEmail, money: 0 }, function() {
-      AllFriends.all(function(r) {
-        $scope.allfriends = r;
-        console.log('AllFriendsList update');
-      });
-      $scope.modal.hide();
-    });
-  };
-
-  $scope.allfriend = AllFriends.get($stateParams.allfriendsId);
-  AllFriends.all(function(r) {$scope.allfriends = r});
-})
 
 .controller('HomeCtrl', function($ionicViewService,$scope,$stateParams,FriendsIOwe,FriendsOweMe,AllFriends,AllBills) {
   //跳转到主页面时立即清除back按钮 

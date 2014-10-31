@@ -102,22 +102,22 @@ angular.module('starter', ['ionic', 'starter.controllers','starter.services'])
         }
       }
     })
-    .state('app.playlists', {
-      url: "/playlists",
+    .state('app.friends', {
+      url: "/friends",
       views: {
         'menuContent' :{
-          templateUrl: "templates/playlists.html",
+          templateUrl: "templates/friends.html",
           controller: 'ChooseFriendCtrl'
         }
       }
     })
 
     .state('app.single', {
-      url: "/playlists/:playlistId",
+      url: "/friends/:friendId",
       views: {
         'menuContent' :{
-          templateUrl: "templates/playlist.html",
-          controller: 'PlaylistCtrl'
+          templateUrl: "templates/editfriend.html",
+          controller: 'ChooseFriendCtrl'
         }
       }
     });

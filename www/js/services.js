@@ -11,6 +11,8 @@ angular.module('starter.services', [])
   var VFriendsOweMe = [];
   var VFriendsIOwe = [];
   var friendOwe;
+  var editFriend;
+  var addindex = 0;
   return {
 
     all: function(callback) {
@@ -32,6 +34,13 @@ angular.module('starter.services', [])
     getOwe: function(){
       return friendOwe;
     },//AllFriends.getOwe()
+    setFriend: function(o){
+      editFriend = o;
+    },
+    getFriend: function(){
+      return editFriend;
+    },//AllFriends.getOwe()
+    
     //欠我钱的
     allfriendsoweme: function(callback) {
       var sql = "SELECT * FROM AllFriendsTable WHERE money>0";
@@ -80,11 +89,15 @@ angular.module('starter.services', [])
       return VFriendsIOwe[friendsioweId];
     },
     add: function(friend, callback){
-      var sqlStr = 'INSERT INTO AllFriendsTable (id,name, email, money) VALUES (?,?,?,?)';
+      var sqlStr = 'INSERT INTO AllFriendsTable (id, name, image, email, money) VALUES (?,?,?,?,?)';
+      addindex++;
       DB.transaction(function(tx) {
-        console.log(sqlStr,friend.id,friend.name,friend.email,friend.money);
-        tx.executeSql(sqlStr, [riend.id,friend.name, friend.email, friend.money]);
+        console.log(sqlStr);
+        console.log(friend.id,friend.name,friend.image,friend.email,friend.money);
+        tx.executeSql(sqlStr, [addindex,friend.name, friend.image,friend.email, friend.money]);
         callback();
+      },function(err){
+        console.log(err);
       });
     },
     update: function(bill, callback){
@@ -112,6 +125,14 @@ angular.module('starter.services', [])
         });      
       });
     },
+    updateFriend: function(friend){
+      var sqlStr = 'UPDATE AllFriendsTable SET email=? WHERE name=?';
+      DB.transaction(function(tx) {
+        tx.executeSql(sqlStr,[friend.email,friend.name],function() {
+          console.log("Update new email=",friend.email);
+        });
+      });              
+    },    
     reset: function(resetname,callback){
       var sqlStr = 'UPDATE AllFriendsTable SET money=0 WHERE name=?';
       DB.transaction(function(tx){
@@ -136,6 +157,7 @@ angular.module('starter.services', [])
     createTable: function() {
       DB.transaction(function(tx) {
         tx.executeSql('CREATE TABLE IF NOT EXISTS AllFriendsTable (id, name NOT NULL UNIQUE,image, email NOT NULL UNIQUE, money NOT NULL)');
+        
       });
     }
   }

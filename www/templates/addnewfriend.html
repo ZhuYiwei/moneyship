@@ -11,15 +11,18 @@
     <form ng-submit="doadd()">
       <div class="list">
         <label class="item item-input">
-          <span class="input-label">Friend name</span>
+          <span class="input-label">Name</span>
           <!-- <input type="text" id="newfriendname" ng-model="newfriend.name" value="jone"> -->
-          <input type="text" id="newfriendname" value="{{newFriendName}}">
+          <!-- <input type="text" ng-model='obj.newFriendName' value="{{obj.newFriendName}}"> -->
+          
+          <!-- 使用ng-model='obj.newFriendName'与choosefriends页面的搜索框绑定 -->          
+          <input type="text" ng-model='obj.newFriendName'>
         </label>
 
         <label class="item item-input">
           <span class="input-label" >email</span>
           <!-- <input type="email" id="newfriendemail" ng-model="newfriend.email"> -->
-          <input type="email" id="newfriendemail">
+          <input type="email" ng-model='obj.newFriendEmail'>
         </label>
         <label class="item">
           <button class="button button-block button-positive" type="submit">Add</button>

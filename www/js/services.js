@@ -126,9 +126,9 @@ angular.module('starter.services', [])
       });
     },
     updateFriend: function(friend){
-      var sqlStr = 'UPDATE AllFriendsTable SET email=? WHERE name=?';
+      var sqlStr = 'UPDATE AllFriendsTable SET email=?, image=? WHERE name=?';
       DB.transaction(function(tx) {
-        tx.executeSql(sqlStr,[friend.email,friend.name],function() {
+        tx.executeSql(sqlStr,[friend.email,friend.image, friend.name],function() {
           console.log("Update new email=",friend.email);
         });
       });              
@@ -143,6 +143,14 @@ angular.module('starter.services', [])
         
       });
     },//AllFriends.reset()
+    deletefriend: function(friend,callback){
+      var sqlStr = 'DELETE FROM AllFriendsTable WHERE name=?';
+      DB.transaction(function(tx){
+        tx.executeSql(sqlStr,[friend.name],function(){
+          callback();
+        });
+      });
+    },
     select: function(selectname,callback){
       var sql='SELECT * FROM AllFriendsTable WHERE name=?';
       DB.transaction(function(tx) {

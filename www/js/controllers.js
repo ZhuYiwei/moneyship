@@ -5,12 +5,52 @@ angular.module('starter.controllers', [])
 })
 //
 
-.controller('ChooseFriendCtrl', function($scope,$ionicViewService, $ionicModal, $timeout, $stateParams, AllFriends) {
+.controller('ChooseFriendCtrl', function($scope,$ionicViewService, $ionicModal, $timeout, $stateParams, AllFriends,AllBills,Camera) {
   //editfriend下用到的
-  $scope.editFriend= AllFriends.getFriend();
+  var f = AllFriends.getFriend();
+
+  $scope.editFriend = {
+
+  }
+  if(f){
+  $scope.editFriend.name = f.name;
+  $scope.editFriend.image = f.image;
+  $scope.editFriend.email =f.email;
+  $scope.editFriend.money = f.money;
+  $scope.editFriend.id = f.id;
+}
+  
   $scope.save= function(){
     AllFriends.updateFriend($scope.editFriend);
   };
+  $scope.deleteFriend = function(friend){
+      console.log(friend.name);
+    AllBills.deleterecord(friend.name,function(){
+      console.log("delete record succeed");
+    });
+    AllFriends.deletefriend(friend,function(){
+        AllFriends.all(function(r) {
+        $scope.allfriends = r;
+        $scope.$apply();
+        console.log('AllFriendsList update');
+      });
+    })
+  };
+  $scope.getPhoto = function() {
+    console.log('Getting camera');
+    Camera.getPicture().then(function(imageURI) {
+      console.log(imageURI);
+      //$scope.lastPhoto = imageURI;
+      $scope.editFriend.image = imageURI;
+    }, function(err) {
+      console.err(err);
+    }, {
+      quality: 75,
+      targetWidth: 320,
+      targetHeight: 320,
+      saveToPhotoAlbum: false
+    });
+  }; 
   //choosefriends.html下用到的
   $scope.choose = function(friend){
     $scope.Friend.name=friend;
@@ -70,20 +110,7 @@ angular.module('starter.controllers', [])
     $state.go('app.choosefriends');
   }
 //take a picture
-  $scope.getPhoto = function() {
-    console.log('Getting camera');
-    Camera.getPicture().then(function(imageURI) {
-      console.log(imageURI);
-      $scope.lastPhoto = imageURI;
-    }, function(err) {
-      console.err(err);
-    }, {
-      quality: 75,
-      targetWidth: 320,
-      targetHeight: 320,
-      saveToPhotoAlbum: false
-    });
-  }
+
 
   $scope.doAddBill=function(){
     var tmpBillName = $scope.Friend.name ;

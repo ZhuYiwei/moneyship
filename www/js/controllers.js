@@ -46,14 +46,14 @@ angular.module('starter.controllers', [])
     Camera.getPicture().then(function(imageURI) {
       console.log(imageURI);
       //$scope.lastPhoto = imageURI;
-      $scope.editFriend.image = imageURI;
+      $scope.editFriend.image = "data:image/jpeg;base64,"+imageURI;
     }, function(err) {
       console.err(err);
     }, {
-      quality: 75,
-      targetWidth: 320,
-      targetHeight: 320,
-      saveToPhotoAlbum: false
+     quality:50,
+     targetWidth:300,
+     targetHeight:300,
+     destinationType: navigator.camera.DestinationType.DATA_URL
     });
   }; 
   //choosefriends.html下用到的

@@ -1,7 +1,7 @@
 angular.module('starter.controllers', [])
 //for picture URL
 .config(function($compileProvider){
-  $compileProvider.imgSrcSanitizationWhitelist(/^\s*(https?|ftp|mailto|file|tel):/);
+  $compileProvider.imgSrcSanitizationWhitelist(/^\s*(https?|file|blob|cdvfile|content|ftp|mailto|file|tel):|data:image\//);
 })
 //
 
@@ -43,17 +43,19 @@ angular.module('starter.controllers', [])
   };
   $scope.getPhoto = function() {
     console.log('Getting camera');
-    Camera.getPicture().then(function(imageURI) {
-      console.log(imageURI);
-      //$scope.lastPhoto = imageURI;
-      $scope.editFriend.image = "data:image/jpeg;base64,"+imageURI;
-    }, function(err) {
-      console.err(err);
-    }, {
+    Camera.getPicture({
      quality:50,
      targetWidth:300,
      targetHeight:300,
      destinationType: navigator.camera.DestinationType.DATA_URL
+     //sourceType: navigator.camera.PictureSourceType.SAVEDPHOTOALBUM
+    }).then(function(imageURI) {
+      console.log(imageURI);
+      //$scope.lastPhoto = imageURI;
+      $scope.editFriend.image = "data:image/jpeg;base64,"+imageURI;
+      console.log($scope.editFriend.image);
+    }, function(err) {
+      console.error(err);
     });
   }; 
   //choosefriends.html下用到的
